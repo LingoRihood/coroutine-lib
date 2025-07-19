@@ -1,6 +1,6 @@
 #include "fiber.h"
 
-static bool debug = false;
+static bool debug = true;
 
 namespace sylar {
 // 当前线程上的协程控制信息

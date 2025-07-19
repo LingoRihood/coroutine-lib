@@ -19,10 +19,15 @@ public:
             // 迭代器本身也是指针
             task = *it;
             // 由主协程切换到子协程，子协程函数运行完毕后自动切换到主协程
+            // 每次 resume() 被调用时，当前协程会从 READY 状态切换到 RUNNING，执行 test_fiber(i)。
+            // 执行完毕后，调用 yield()，控制权会回到调度器或主协程。
+            // 然后调度器继续从任务队列中取出下一个协程任务执行。
             task->resume();
             it++;
         }
+        // std::cout << "开始析构"<< std::endl;
         m_tasks.clear();
+        // 当 shared_ptr 离开作用域时，它会自动销毁并减少引用计数。如果没有其他 shared_ptr 引用该对象，那么引用计数降为 0，对象会被销毁。
     }
 private:
     // 任务队列

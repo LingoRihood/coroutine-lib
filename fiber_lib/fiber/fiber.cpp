@@ -26,9 +26,11 @@ void Fiber::SetThis(Fiber* f) {
 // 获取当前线程正在运行的协程（Fiber）实例的 shared_ptr
 std::shared_ptr<Fiber> Fiber::GetThis() {
     if(t_fiber) {
+        // std::cout << "ss"<< std::endl;
+        // std::shared_from_this() 是 std::enable_shared_from_this 类模板的一部分。它使得一个类的成员函数能够安全地生成一个指向当前对象的 std::shared_ptr，并且增加该对象的引用计数。shared_from_this() 的核心作用是生成一个 shared_ptr，并通过该 shared_ptr 增加对象的引用计数，从而管理对象的生命周期。
         return t_fiber->shared_from_this();
     }
-
+    // std::cout << "kk" << std::endl;
     // new Fiber() 会调用私有构造函数（只允许在此内部创建），表示主协程专属构造路径。
     std::shared_ptr<Fiber> main_fiber(new Fiber());
     t_thread_fiber = main_fiber;
@@ -152,6 +154,7 @@ void Fiber::resume() {
             std::cerr << "resume() to t_scheduler_fiber failed\n";
 			pthread_exit(NULL);
         }
+        // std::cout << "hi" << std::endl;
     } else {
         // 表示协程直接运行于某个线程上下文，而非调度器。
         // 通常用于简单场景或线程主协程切换。
@@ -160,13 +163,15 @@ void Fiber::resume() {
             std::cerr << "resume() to t_thread_fiber failed\n";
 			pthread_exit(NULL);
         }
+        // std::cout << "hh"<< std::endl;
     }
 }
 
 // 协程主动让出执行权，切换回到调度器协程或线程主协程
+// yield() 会通过 swapcontext() 切换上下文，把当前协程的上下文保存并切换到调度器协程的上下文
 void Fiber::yield() {
     assert(m_state == RUNNING || m_state == TERM);
-
+    // std::cout << "alive" << std::endl;
     if(m_state != TERM) {
         m_state = READY;
     }

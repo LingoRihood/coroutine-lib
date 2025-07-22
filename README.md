@@ -6,3 +6,6 @@
 
 debug=true后的结果
 ![alt text](image-2.png)
+
+# scheduler 测试结果
+![alt text](image-3.png)

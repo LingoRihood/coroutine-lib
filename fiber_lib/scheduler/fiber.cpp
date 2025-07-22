@@ -72,7 +72,7 @@ Fiber::Fiber() {
 
     // s_fiber_count 是静态变量，表示当前存活的 Fiber 总数量；
     // 便于监控或调试内存泄漏（是否有 Fiber 没有释放）；
-    s_fiber_count++;
+    ++s_fiber_count;
     if(debug) {
         std::cout << "Fiber(): main id = " << m_id << std::endl;
     }
@@ -101,7 +101,7 @@ Fiber::Fiber(std::function<void()> cb, size_t stacksize, bool run_in_scheduler)
         makecontext(&m_ctx, &Fiber::MainFunc, 0);
 
         m_id = s_fiber_id++;
-        s_fiber_count++;
+        ++s_fiber_count;
         if(debug) {
             std::cout << "Fiber(): child id = " << m_id << std::endl;
         }
@@ -165,6 +165,7 @@ void Fiber::resume() {
         }
         // std::cout << "hh"<< std::endl;
     }
+    // std::cout << "resume" << std::endl;
 }
 
 // 协程主动让出执行权，切换回到调度器协程或线程主协程
@@ -179,6 +180,9 @@ void Fiber::yield() {
     if(m_runInScheduler) {
         // 协程运行在调度器管理下（m_runInScheduler == true）
         SetThis(t_scheduler_fiber);
+
+        // std::cout<< "syl"<< std::endl;
+
         if(swapcontext(&m_ctx, &(t_scheduler_fiber->m_ctx))) {
             std::cerr << "yield() to to t_scheduler_fiber failed\n";
 			pthread_exit(NULL);
@@ -190,10 +194,13 @@ void Fiber::yield() {
 			pthread_exit(NULL);
         }
     }
+    // std::cout<< "yield"<< std::endl;
 }
 
 // 通过封装协程入口函数，可以实现协程在结束自动执行yield的操作。
 void Fiber::MainFunc() {
+    // std::cout << "main" <<std::endl;
+
     // 获取当前协程对象，确保引用计数正常。
     std::shared_ptr<Fiber> curr = GetThis();
     assert(curr != nullptr);
@@ -210,6 +217,9 @@ void Fiber::MainFunc() {
     //引用计数-1，如果此时为0，协程对象销毁
     // reset() 的作用是将 shared_ptr 绑定的对象指针置为 nullptr，并减少该对象的引用计数。如果没有其他 shared_ptr 对象共享该资源，那么对象会被销毁。
     curr.reset();
+
+    // std::cout << "same" << std::endl;
+
     raw_ptr->yield();
 }
 }

@@ -103,7 +103,7 @@ void* Thread::run(void* arg) {
 
     std::function<void()> cb;
 
-    // swap -> 可以减少m_cb中只能指针的引用计数
+    // thread->m_cb被交换为空，cb获取了资源，但引用计数不变
     cb.swap(thread->m_cb);
 
     // 初始化完成

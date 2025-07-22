@@ -42,27 +42,35 @@ void scheduleLock(FiberOrCb fc, int thread = -1) {
             m_tasks.push_back(task);
         }
     }
+
+    // 暂时无用
     if(need_tickle) {
         tickle();
     }
 }
 
     // 启动线程池
+    // 启动调度器（线程池开始工作）
     virtual void start();
 
     // 关闭线程池
+    // 停止调度器，结束线程池
     virtual void stop();
 
 protected:
+    // 通知空闲线程有新任务进入（通常用条件变量或其他唤醒机制实现）。
     virtual void tickle();
 
     // 线程函数
+    // 线程池中线程运行的核心逻辑（执行任务调度和任务执行）。
     virtual void run();
 
     // 空闲协程函数
+    // 线程无任务可执行时运行的空闲函数（空转等待新任务）。
     virtual void idle();
 
     // 是否可以关闭
+    // 判断调度器是否处于关闭状态
     virtual bool stopping();
 
     bool hasIdleThreads() {
@@ -130,7 +138,7 @@ private:
     // 主线程是否用作工作线程
     bool m_useCaller;
     // 如果是 -> 需要额外创建调度协程
-    std::shared_ptr<Fiber> m_schedulerFibers;
+    std::shared_ptr<Fiber> m_schedulerFiber;
     // 如果是 -> 记录主线程的线程id
     int m_rootThread = -1;
     // 是否正在关闭

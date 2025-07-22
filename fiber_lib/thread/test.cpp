@@ -27,6 +27,8 @@ int main() {
         thrs.push_back(thr);
     }
 
+    // std::cout <<"hh" << std::endl;
+
     for(int i = 0; i < 5; ++i) {
         thrs[i]->join();
     }

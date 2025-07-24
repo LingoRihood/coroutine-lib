@@ -9,3 +9,6 @@ debug=true后的结果
 
 # scheduler 测试结果
 ![alt text](image-3.png)
+
+# timer 测试结果
+![alt text](image-4.png)

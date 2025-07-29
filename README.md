@@ -12,3 +12,8 @@ debug=true后的结果
 
 # timer 测试结果
 ![alt text](image-4.png)
+
+# iomanager 测试结果
+![alt text](image-6.png)
+
+![alt text](image-5.png)

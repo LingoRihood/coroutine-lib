@@ -32,3 +32,6 @@ debug=true后的结果
 
 # libevent测试结果
 ![alt text](image-13.png)
+
+# 代码量
+![alt text](image-14.png)

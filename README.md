@@ -23,3 +23,12 @@ debug=true后的结果
 ![alt text](image-9.png)
 ![alt text](image-10.png)
 ![alt text](image-7.png)
+
+# 原生epoll测试结果
+## 单核情况
+![alt text](image-12.png)
+## 多核情况
+![alt text](image-11.png)
+
+# libevent测试结果
+![alt text](image-13.png)
